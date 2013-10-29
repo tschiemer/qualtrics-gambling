@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Pick-A-Number</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        
+        <style type="text/css">
+            blockquote {
+                font-family: "Courier New",Courier,monospace;
+                background-color: lightgray;
+                padding: 3px;
+            }
+            
+            .comment {
+                color: green;
+            }
+        </style>
+        
+        <!-- pickanumber javascript -->
+        
+        <!-- include this line anywhere in document -->
+        <script type="text/javascript" src="pickanumber.js"></script>
+        
+        <!-- / pickanumber javascript -->
+        
+    </head>
+    <body>
+        
+        <h1>Pick-A-Number</h1>
+        
+        <h2>License</h2>
+        
+        
+        <dl>
+            <dt>Copyright</dt>
+            <dd>2013 ETH Zurich, www.socio.ethz.ch, c/o Marc Hoeglinger &lt;hoeglinger&#64;soz.gess.ethz.ch&gt;</dd>
+            <dt>License</dt>
+            <dd>GPL V2, <a href="http://www.gnu.org/licenses/gpl-2.0.txt">http://www.gnu.org/licenses/gpl-2.0.txt</a></dd>
+            <dt>Author</dt>
+            <dd>Philip Tschiemer &lt;tschiemer&#64;filou.se&gt;</dd>
+            <dt>Link</dt>
+            <dd><a href="https://github.com/tschiemer/qualtrics-gambling">https://github.com/tschiemer/qualtrics-gambling</a></dd>
+        </dl>
+        
+        <h2>Setup</h2>
+        
+        <p>To load the pick-a-umber Javascript library please insert the following line <em>once</em> in your html site:</p>
+        <blockquote>
+            <pre>
+    &lt;!-- pickanumber javascript --&gt;
+
+    &lt;!-- include this line anywhere in document --&gt;
+    &lt;script type="text/javascript" src="http://www.your.url.com/your/path/pickanumber.js"&gt;&lt;/script&gt;
+
+    &lt;!-- / pickanumber javascript --&gt;
+            </pre>
+        </blockquote>
+            
+        <p>The picker then can be initialized in two ways:</p>
+
+        <ol>
+            <li>Using pure Javascript Objects, resp one call.</li>
+            <li>Setting up HTML elements and call Javascript on these.</li>
+        </ol>
+        
+        <h3>Pure Javascript approach</h3>
+            <p>For this approach simply the following must be inserted into the HTML document</p>
+            
+            <blockquote>
+                <pre>
+    &lt;script type="text/javascript"&gt;
+    var my_fields = {
+        // fields are explained below
+    };
+    var my_options = {
+        // options are explained below
+    };
+    pickanumber_create_here('My Show Button Label',my_fields,my_options);
+    &lt;/script&gt;
+                </pre>
+            </blockquote>
+            
+            <p>Thereby a PAN-Table is created exactly in the position where the code is inserted. Along with the table a show button having the label <em>My Show Button Label</em> is created.</p>
+
+            
+            
+            <h3>HTML/Javascript approach</h3>
+            
+            <p>In case you want to apply custom styling to your PAN table (eg. define specific positioning) then you can set the second appreach where you set the dive anchor and buttons as desired, eg as follows:</p>
+            
+            <blockquote>
+                <pre>
+    &lt;table id="my_pan_id"&gt;&lt;/table&gt;
+    
+    &lt;button id="my_show_button_id"&gt;My Show Button Label&lt;/button&gt;
+                </pre>
+            </blockquote>
+            
+            <p>.. and initialize the table (add the code <em>AFTER</em> the HTML!) as follows:</p>
+            
+            <blockquote>
+                <pre>
+    &lt;script type="text/javascript"&gt;
+
+    var my_fields = [
+    // .. fields explained below
+    ];
+    var my_options = {
+    // ... options explained below
+    };
+
+    new Dice('my_dice_id','my_throw_button_id',my_options);
+
+    &lt;/script&gt;
+                </pre>
+            </blockquote>
+            
+            <h3>Fields</h3>
+            
+            <p>The <em>fields</em>-parameter must be an array of object, each defined as follows:</p>
+            
+            <blockquote>
+                <pre>
+    {
+        <span class="comment">// Multiplicity of entry
+        // Optional, default = 1.
+        // If a value n > 1 is chosen, the given field will be reproduced n times.</span>
+        multiplicity: 4,
+
+        <span class="comment">// HTML Data to display, when fields are hidden, loaded respectively
+        // the string {{index}} will be replace with the field's index value. A field's index
+        // value is determined through its position in the table, whereas the table is filled
+        // row-wise, ie just a table of the field indices would look as follows for a 2x3 matrix:
+        //  1 2 3
+        //  4 5 6</span>
+        hidden: '&lt;h1>{{index}}&lt;/h1&gt; My value is hidden.',
+
+        <span class="comment">// HTML Data to display, when fields are shown after hitting the show button.
+        // the string {{index}} will be replaced with the field's index value.</span>
+        visible: '&lt;h1&gt;{{index}}&lt;/h1&gt; I am now visible.'
+    }
+                </pre>
+            </blockquote>
+            
+            <blockquote style="background-color: transparent">
+                <b>Example</b>
+            </blockquote>
+            <blockquote>
+                <pre>
+                var my_fields = [
+                    {multiplicity: 2, hidden:'{{index}}', visible: '{{index}} Random'},
+                    {hidden:'{{index}}', visible: '{{index}} Yes'},
+                    {hidden:'{{index}}', visible: '{{index}} No'}
+                ];
+                </pre>
+            </blockquote>
+            
+            <h3>Options</h3>
+            
+            <p>PAN options are as follows, explained inline:</p>
+            
+            <blockquote>
+                <pre>
+     {
+
+        <span class="comment">// Shuffle given fields? Recommended when not a given order is required.
+        // Optional, default = false.</span>
+        shuffle: false,
+
+        <span class="comment">// Dimensions of table.
+        // Optional, default = all fields in one row.
+        // Matrices are filled row-wise.
+
+        // Can have two types of settings:
+
+        // dim = 2 : use smallest square matrix, that fits all fields</span>
+        dim: 2,
+
+        <span class="comment">// ..or dim = [n_rows,n_columns] : create a matrix with n_rows rows and n_columns columns.
+        // Fields that don't fit into the matrix, are not shown.</span>
+        dim: [2,3],
+
+        <span class="comment">// Additional CSS styling of table td elements, applies to all elements.
+        // Optional, default: {'vertical-align':'top', 'text-align':'center'}
+
+        // Syntax identical to DOM style object.
+        // For a list of possible keys/values please see:
+        // <a href="http://www.w3schools.com/jsref/dom_obj_style.asp">http://www.w3schools.com/jsref/dom_obj_style.asp</a></span>
+        field_style: {
+            height: '200px',
+            'backgroundColor' : 'red'
+        }
+
+     };
+                </pre>
+            </blockquote>
+            
+            <h3>Options</h3>
+            
+            <p>The dice options are set through as fields of an object, following you see an example with all possibel options (remember, this is inside the <em>script</em>-tag):</p>
+            
+        
+            <h2>Examples</h2>
+            
+            <fieldset>
+                <legend>Pure Javascript</legend>
+                
+                
+                <script type="text/javascript">
+                    
+                    var fields_js = [
+                        {multiplicity: 2, hidden:'<h1>{{index}}</h1>', visible: '<h1>{{index}}</h1> Random'},
+                        {hidden:'<h1>{{index}}</h1>', visible: '<h1>{{index}}</h1>Yes'},
+                        {hidden:'<h1>{{index}}</h1>', visible: '<h1>{{index}}</h1>No'}
+                    ];
+                    
+                    var options_js = {
+                        field_style : {
+                            height: '100px',
+                            width:  '100px',
+                            'verticalAlign': 'top',
+                            'textAlign'    : 'center'
+                        }
+                    };
+                    
+                    pickanumber_create_here('hehej!',fields_js,options_js);
+                </script>
+                
+                <blockquote style="background-color: transparent"><b>Code</b></blockquote>
+                <blockquote>
+                    <pre>
+    &lt;script type="text/javascript"&gt;
+
+        var fields_js = [
+            {multiplicity: 2, hidden:'&lt;h1&gt;{{index}}&lt;/h1&gt;', visible: '&lt;h1&gt;{{index}}&lt;/h1&gt; Random'},
+            {hidden:'&lt;h1&gt;{{index}}&lt;/h1&gt;', visible: '&lt;h1&gt;{{index}}&lt;/h1&gt;Yes'},
+            {hidden:'&lt;h1&gt;{{index}}&lt;/h1&gt;', visible: '&lt;h1&gt;{{index}}&lt;/h1&gt;No'}
+        ];
+
+        var options_js = {
+            field_style : {
+                height: '100px',
+                width:  '100px',
+                'verticalAlign': 'top',
+                'textAlign'    : 'center'
+            }
+        };
+
+        pickanumber_create_here('hehej!',fields_js,options_js);
+    &lt;/script&gt;
+                    </pre>
+                </blockquote>
+            </fieldset>
+            
+            <br/><br/>
+            
+            <fieldset>
+                <legend>HTML+JS, additional styling</legend>
+                
+                <table id="pan-table" border="1" cellpadding="2"></table>
+        
+                <button id="show">Show fields!</button>
+
+                <script type="text/javascript">
+                    var fields = [
+                        {multiplicity: 5, hidden:'<h1>{{index}}</h1>', visible: '<h1>{{index}}</h1> Random'},
+                        {hidden:'<h1>{{index}}</h1>', visible: '<h1>{{index}}</h1>Yes'},
+                        {hidden:'<h1>{{index}}</h1>', visible: '<h1>{{index}}</h1>No'}
+                    ];
+
+                    var options = {
+                        dim: [2,4],
+                        shuffle: true,
+                        field_style : {
+                            height: '100px',
+                            width:  '100px',
+                            'verticalAlign': 'top',
+                            'textAlign'    : 'center'
+                        }
+                    };
+
+                    new PickANumber('pan-table','show',fields,options);
+                </script>
+                
+                
+                <blockquote style="background-color: transparent"><b>Code</b></blockquote>
+                <blockquote>
+                    <pre>
+
+
+    &lt;table id="pan-table" border="1" cellpadding="2"&gt;&lt;/table&gt;
+
+    &lt;button id="show"&gt;Show fields!&lt;/button&gt;
+
+    &lt;script type="text/javascript"&gt;
+
+        var fields = [
+            {multiplicity: 5, hidden:'&lt;h1&gt;{{index}}&lt;/h1&gt;', visible: '&lt;h1&gt;{{index}}&lt;/h1&gt; Random'},
+            {hidden:'&lt;h1&gt;{{index}}&lt;/h1&gt;', visible: '&lt;h1&gt;{{index}}&lt;/h1&gt;Yes'},
+            {hidden:'&lt;h1&gt;{{index}}&lt;/h1&gt;', visible: '&lt;h1&gt;{{index}}&lt;/h1&gt;No'}
+        ];
+
+        var options = {
+            dim: [2,4],
+            shuffle: true,
+            field_style : {
+                height: '100px',
+                width:  '100px',
+                'verticalAlign': 'top',
+                'textAlign'    : 'center'
+            }
+        };
+
+        new PickANumber('pan-table','show',fields,options);
+    &lt;/script&gt;
+                    </pre>
+                </blockquote>
+            </fieldset>
+        
+        
+        
+        
+    </body>
+</html>

@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Lucky Wheeler</title>
+        
+        <meta charset="UTF-8"/>
+        
+        <meta name="author" content="Philip Tschiemer"/>
+        
+        <style type="text/css">
+            blockquote {
+                font-family: "Courier New",Courier,monospace;
+                background-color: lightgray;
+                padding: 3px;
+            }
+            
+            .comment {
+                color: green;
+            }
+        </style>
+        
+        <!-- wheel javascript -->
+        
+        <!-- include this line anywhere in document -->
+        <script type="text/javascript" src="wheel.js"></script>
+        
+        <!-- / wheel javascript -->
+        
+    </head>
+    <body>
+
+        <h1>Lucky Wheeler</h1>
+        
+        <h2>License</h2>
+        
+        
+        <dl>
+            <dt>Copyright</dt>
+            <dd>2013 ETH Zurich, www.socio.ethz.ch, c/o Marc Hoeglinger &lt;hoeglinger&#64;soz.gess.ethz.ch&gt;</dd>
+            <dt>License</dt>
+            <dd>GPL V2, <a href="http://www.gnu.org/licenses/gpl-2.0.txt">http://www.gnu.org/licenses/gpl-2.0.txt</a></dd>
+            <dt>Author</dt>
+            <dd>Philip Tschiemer &lt;tschiemer&#64;filou.se&gt;</dd>
+            <dt>Link</dt>
+            <dd><a href="https://github.com/tschiemer/qualtrics-gambling">https://github.com/tschiemer/qualtrics-gambling</a></dd>
+        </dl>
+        
+        <h2>Setup</h2>
+        
+        <p>To load the lucky wheeler Javascript library please insert the following line <em>once</em> in your html site:</p>
+        <blockquote>
+            <pre>
+    &lt;!-- lucky wheeler javascript --&gt;
+
+    &lt;!-- include this line anywhere in document --&gt;
+    &lt;script type="text/javascript" src="http://www.your.url.com/your/path/wheel.js"&gt;&lt;/script&gt;
+
+    &lt;!-- / lucky wheeler javascript --&gt;
+            </pre>
+        </blockquote>
+            
+        <p>The wheel then can be initialized in two ways:</p>
+
+        <ol>
+            <li>Using pure Javascript Objects, resp one call.</li>
+            <li>Setting up HTML elements and call Javascript on these.</li>
+        </ol>
+        
+        <h3>Pure Javascript approach</h3>
+            <p>For this approach simply the following must be inserted into the HTML document</p>
+            
+            <blockquote>
+                <pre>
+    &lt;script type="text/javascript"&gt;
+    var my_options = {
+        // options are explained below
+    };
+    wheel_create_here('My Rotate Button Label',my_options);
+    &lt;/script&gt;
+                </pre>
+            </blockquote>
+            
+            <p>Thereby a lucky wheel is created exactly in the position where the code is inserted. Along with the wheel a rotate button having the label <em>My Rotate Button Label</em> is created.</p>
+
+            
+            
+            <h3>HTML/Javascript approach</h3>
+            
+            <p>In case you want to apply custom styling to your Lucky Wheel (eg. define specific positioning) then you can use the second approach where you set the div anchor and buttons as desired, eg as follows:</p>
+            
+            <blockquote>
+                <pre>
+    &lt;div id="my_wheel_id"&gt;&lt;/div&gt;
+    
+    &lt;button id="my_rotate_button_id"&gt;My Rotate Button Label&lt;/button&gt;
+                </pre>
+            </blockquote>
+            
+            <p>.. and initialize the wheel (add the code <em>AFTER</em> the HTML!) as follows:</p>
+            
+            <blockquote>
+                <pre>
+    &lt;script type="text/javascript"&gt;
+
+    var my_options = {
+    // ... options explained below
+    };
+
+    new Wheel('my_wheel_id','my_rotate_button_id',my_options);
+
+    &lt;/script&gt;
+                </pre>
+            </blockquote>
+            
+            
+            <h3>Options</h3>
+            
+            <p>Wheel options are as follows, explained inline:</p>
+            
+            <blockquote>
+                <pre>
+     {
+
+        <span class="comment">// Number of possible throws before the dice (and buttons) are deactived.
+        /
+        <span class="comment">// Number of possible throws before the dice (and buttons) are deactived.
+        // Optionl, default = 0.
+        // 0        infinite throws / dice will never be deactivated
+        //          or if a result_set is given, will be thrown exactly the remaining
+        //          number of throws considering the first_throw_nr
+        // N > 0    exactly N throws
+        //          ATTENTION: if a result set is given aswell as a first_throw_nr and the 
+        //          total throw count can grow highger than the result_set count, the drawn 
+        //          results will be drawn according to the fallback_strategy.
+        //          </span>
+        possible_throws: 0, 
+
+        <span class="comment">// Fallback strategy to use, if for a given result set and an expected
+        // number of results, there are too few results given.
+        // Optional, default: wrap-around. Possible values:
+        //      'wrap-around'   Drawing will begin from the first given result again
+        //      'random'        A random result according to the given probabilities will be drawn.</span>
+        fallback_strategy: 'wrap-around',
+
+        <span class="comment">// List of all possible values and their probablities.
+        // Required.
+        // The probabilities will be normalized, ie actual probability = given probability / sum of all probabilities
+        // The key property is used both to identify the result and is passed to the callback function.
+        // The description property is shown in the middle of the wheel for a result.
+        // The color_img property denotes the color image to be used (if you have three alternating colors
+        // set the property as follows)
+        // The label_img property denotes the label image holding the correct graphics for a result
+        // NOTE: the images are used for browsers not supporting any rotation</span>
+        value_set : [
+            {key: "1", probability: 1, description:'do this', color_img:'color-1.jpg', label_img:'label-1.png'},
+            {key: "2", probability: 1, description:'do that', color_img:'color-2.jpg', label_img:'label-2.png'},
+            {key: "3", probability: 1, description:'dont do this', color_img:'color-3.jpg', label_img:'label-3.png'},
+            {key: "4", probability: 1, description:'dont that', color_img:'color-1.jpg', label_img:'label-4.png'},
+            {key: "5", probability: 1, description:'do this?', color_img:'color-2.jpg', label_img:'label-5.png'},
+            {key: "6", probability: 1, description:'do that?', color_img:'color-3.jpg', label_img:'label-6.png'}
+        ],
+        
+        <span class="comment">// List of predefined result keys
+        // Optional
+        // If given the dice can automatically only be thrown as many times as there are given keys.
+        // Can take two forms, the values must be strings as used for keys in the value set, otherwise an error occurs:
+        // Form 1 : array of keys</span>
+        result_set: ['1','2','1','2'],
+
+        <span class="comment">//Form 2: Comma separated (string) list</span>
+        result_set: '1,2,3,4,5,6',
+
+        <span class="comment">// Index (starting at 0) of result_set keys to use for this sequence.
+        // Optional (default = 0), natural number incl. zero.</span>
+        <span class="comment">// Static example, in this case '3' would be the first result</span>
+        first_throw_nr: 2, 
+
+        <span class="comment">// Generic image settings
+        // Required</span>
+        images : {
+
+            <span class="comment">// Base URL of the base folder where your images reside.
+            // Required.
+            // MUST have a trailing slash</span>
+            base_url : 'http://www.your-domain.com/your/image/path/',
+
+            <span class="comment">// Size of images
+            // Required.
+            // Images will be scaled to this size, required for positioning</span>
+            img_size  : 400,
+
+            <span class="comment">// Arrow image to use (should be pointing at topmost field.
+            // Optional.</span>
+            select_img: : 'init.png'
+        },
+
+        <span class="comment">// Callback function to handle results
+        // Optional
+        // Will be called at each rotation/throw.
+        // Passed arguments is the rotation/throw number (inclusive this throw, it will be the n-th one)
+        // and  the result key as defined in <em>value_set</em>.</span>
+        result_callback: function(throw_nr, result_key){
+            <span class="comment">// your handling here</span>
+        },
+        
+        <span class="comment">// Callback function to be called upon permanent deactivation of wheel
+        // Optional</span>
+        finished_callback: function(){
+            <span class="comment">// your function here</span>
+        }
+
+     };
+                </pre>
+            </blockquote>
+            
+        <h2>Integration Qualtrics</h2>
+            
+        <p>
+            The lucky wheel structure is identical to the dice structure in terms, ie to handle the result
+            the optional <i>result_callback</i>-option is used. Ergo the wheel can be set up in the same way
+            as the dice, ie either using embedded variables [Variant 1] or additional questions that may or may not be hidden [Variants 2,3].
+        </p>
+        
+        <blockquote style="background-color:transparent;"><b>Saving results through the result callback</b></blockquote>
+            <blockquote>
+                <pre>
+
+    <span class="comment">// Instantiate the wheel either within the question text (inserted as HTML)
+    // or within the Javascript block associated with the according question.</span>
+    new Wheel('wheel','rotate',{
+
+        ... your other options here ...
+
+        result_callback: function(throw_nr,result_key){
+
+            <span class="comment">// Variant 1 (No Requirement)
+            // Save result to embedded data field (need
+            // not be set through survey flow settings)</span>
+            Qualtrics.SurveyEngine.setEmbeddedData('result_matrix_embedded'+throw_nr, result_key);
+
+            <span class="comment">// Variant 2 (Requirement: in Javascript block)
+            // Set choice by result key, choice index respectively
+            // Attention: choices must be in correct order (ie choice 1 must have value 1, etc)</span>
+            self.setChoiceValue('1', result_key, true);
+
+            <span class="comment">// Variant 3 (Requirement: in Javascript block)
+            // should you use only 1 dice that can be thrown multiple times
+            // you can use &lt;throw_nr&gt; instead of the predefined '1'</span>
+            self.setChoiceValue(throw_nr,result_key,true);
+
+        }
+    });
+
+            </blockquote>
+            
+        <h2>Image Generator</h2>
+            
+        <p>To generate an image set with all required images you can use the following form.</p>
+        
+        <p>To keep the overall required number of files (and download sizes) small, it is recommended to use as few colors as possible.</p>
+        
+        <p>
+            Requirements for form to work: files on webserver with PHP (Extensions: Zip, Imagick)<br/>
+            Wether authorization for image generation is required is set at the beginning of the <i>wheel.php</i> file,
+            where you also can choose your favourite username/password combination.
+        </p>
+        
+        <fieldset>
+
+            <form method="POST" action="wheel.php">
+
+                <label>Font Size</label>
+                <input name="font_size" value="20"/>
+
+                <label>Number of wanted Slices</label>
+            <select name="slice_count">
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option selected>5</option>
+                <option>6</option>
+                <option>7</option>
+                <option>8</option>
+                <option>9</option>
+                <option>10</option>
+                <option>11</option>
+                <option>12</option>
+                <option>13</option>
+                <option>14</option>
+                <option>15</option>
+                <option>16</option>
+            </select>
+
+                <label>Number different colors:</label>
+            <select name="color_count">
+                <option>1</option>
+                <option selected>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+                <option>6</option>
+                <option>7</option>
+                <option>8</option>
+                <option>9</option>
+                <option>10</option>
+                <option>11</option>
+                <option>12</option>
+                <option>13</option>
+                <option>14</option>
+                <option>15</option>
+                <option>16</option>
+            </select>
+
+                <table cellborder="1" cellpadding="5">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Color</th>
+                            <th>Label</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>
+                                <input class="colorpicker" name="slice_color[]" type="text" value="#ffffff"/>
+                            </td>
+                            <td>
+                                <input  name="slice_label[]" type="text" value="Label1"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>
+                                <input class="colorpicker" name="slice_color[]" type="text" value="#ff5050"/>
+                            </td>
+                            <td>
+                                <input  name="slice_label[]" type="text" value="Label2"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>
+                                <input class="colorpicker" name="slice_color[]" type="text" value="#ffffff"/>
+                            </td>
+                            <td>
+                                <input  name="slice_label[]" type="text" value="Label3"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td>
+                                <input class="colorpicker" name="slice_color[]" type="text" value="#ff5050"/>
+                            </td>
+                            <td>
+                                <input  name="slice_label[]" type="text" value="Label4"/>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>5</td>
+                            <td>
+                                <input class="colorpicker" name="slice_color[]" type="text" value="#ffffff"/>
+                            </td>
+                            <td>
+                                <input  name="slice_label[]" type="text" value="Label5"/>
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <td>6</td>
+                            <td>
+                                <input class="colorpicker" name="slice_color[]" type="text" value="#ff5050"/>
+                            </td>
+                            <td>
+                                <input  name="slice_label[]" type="text" value="Label6"/>
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <td>7</td>
+                            <td>
+                                <input class="colorpicker" name="slice_color[]" type="text" value="#ffffff"/>
+                            </td>
+                            <td>
+                                <input  name="slice_label[]" type="text" value="Label7"/>
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <td>8</td>
+                            <td>
+                                <input class="colorpicker" name="slice_color[]" type="text" value="#ff5050"/>
+                            </td>
+                            <td>
+                                <input  name="slice_label[]" type="text" value="Label8"/>
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <td>9</td>
+                            <td>
+                                <input class="colorpicker" name="slice_color[]" type="text" value="#ffffff"/>
+                            </td>
+                            <td>
+                                <input  name="slice_label[]" type="text" value="Label9"/>
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <td>10</td>
+                            <td>
+                                <input class="colorpicker" name="slice_color[]" type="text" value="#ff5050"/>
+                            </td>
+                            <td>
+                                <input  name="slice_label[]" type="text" value="Label0"/>
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <td>11</td>
+                            <td>
+                                <input class="colorpicker" name="slice_color[]" type="text" value="#ffffff"/>
+                            </td>
+                            <td>
+                                <input  name="slice_label[]" type="text" value="Label1"/>
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <td>12</td>
+                            <td>
+                                <input class="colorpicker" name="slice_color[]" type="text" value="#ff5050"/>
+                            </td>
+                            <td>
+                                <input  name="slice_label[]" type="text" value="Label12"/>
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <td>13</td>
+                            <td>
+                                <input class="colorpicker" name="slice_color[]" type="text" value="#ffffff"/>
+                            </td>
+                            <td>
+                                <input  name="slice_label[]" type="text" value="Label13"/>
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <td>14</td>
+                            <td>
+                                <input class="colorpicker" name="slice_color[]" type="text" value="#ff5050"/>
+                            </td>
+                            <td>
+                                <input  name="slice_label[]" type="text" value="Label14"/>
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <td>15</td>
+                            <td>
+                                <input class="colorpicker" name="slice_color[]" type="text" value="#ffffff"/>
+                            </td>
+                            <td>
+                                <input  name="slice_label[]" type="text" value="Label15"/>
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <td>16</td>
+                            <td>
+                                <input class="colorpicker" name="slice_color[]" type="text" value="#ff5050"/>
+                            </td>
+                            <td>
+                                <input  name="slice_label[]" type="text" value="Label16"/>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <input type="submit" value="Download images files"/>
+            </form>
+        </fieldset>
+        
+        <br/>
+        
+        <h2>Examples</h2>
+            
+        
+        <fieldset>
+            
+            <legend>4 answers, 2 colors, custom description styling, 3 throws, font size 20, centered, w/o arrow</legend>
+            
+            <div style="padding-left:50%;">
+                <div id="wheel" style="margin-left: -200px"></div>
+            </div>
+            
+            <button id="btn_rotate">Rotate!</button><br/>
+            
+            <script type="text/javascript">
+                var wheel = new Wheel('wheel','btn_rotate',{
+                    possible_throws: 3,
+                    value_set: [
+                        {key:'yes1',probability: 1, description: '<span style="font-size:30px">hello1!</span>', color_img:'color-1.jpg',label_img:'label-1.png'},
+                        {key:'yes2',probability: 1, description: '<span style="font-size:30px">hello2!</span>', color_img:'color-2.jpg',label_img:'label-2.png'},
+                        {key:'yes3',probability: 1, description: '<span style="font-size:30px">hello3!</span>', color_img:'color-1.jpg',label_img:'label-3.png'},
+                        {key:'yes4',probability: 1, description: '<span style="font-size:30px">hello4!</span>', color_img:'color-2.jpg',label_img:'label-4.png'}
+                    ],
+                    images: {
+                        base_url: 'img/wheel1/',
+                        img_size: 400
+                    }
+                });
+            </script>
+            
+            <blockquote style="background-color: transparent"><b>Code</b></blockquote>
+                <blockquote>
+                    <pre>
+
+    <span class="comment">&lt;!-- the outer div and custom styling are used to center the wheel --></span>
+    &lt;div style="padding-left:50%;"&gt;
+        &lt;div id="wheel" style="margin-left: -200px"&gt;&lt;/div&gt;
+    &lt;/div &gt;
+
+    &lt;button id="btn_rotate"&gt;Rotate!&lt;/button&gt;
+
+    &lt;script type="text/javascript"&gt;
+
+        var options = {
+            possible_throws: 3,
+            value_set: [
+                {key:'yes1',probability: 1, description: '&lt;span style="font-size:30px"&gt;hello1!&lt;/span&gt;', color_img:'color-1.jpg',label_img:'label-1.png'},
+                {key:'yes2',probability: 1, description: '&lt;span style="font-size:30px"&gt;hello2!&lt;/span&gt;', color_img:'color-2.jpg',label_img:'label-2.png'},
+                {key:'yes3',probability: 1, description: '&lt;span style="font-size:30px"&gt;hello3!&lt;/span&gt;', color_img:'color-1.jpg',label_img:'label-3.png'},
+                {key:'yes4',probability: 1, description: '&lt;span style="font-size:30px"&gt;hello4!&lt;/span&gt;', color_img:'color-2.jpg',label_img:'label-4.png'}
+            ],
+            images: {
+                base_url: 'img/wheel1/',
+                img_size: 400
+            }
+        };
+
+        new Wheel('wheel','btn_rotate',options);
+    &lt;/script&gt;
+                    </pre>
+                </blockquote>
+            
+        </fieldset>
+        
+        <br/><br/>
+        
+        
+        <fieldset>
+            
+            <legend>Same setup, but with predefined answers</legend>
+            
+            <div id="wheel_predefined"></div>
+            
+            <button id="btn_rotate_predefined">Rotate!</button><br/>
+            
+            <script type="text/javascript">
+                var wheel = new Wheel('wheel_predefined','btn_rotate_predefined',{
+                    value_set: [
+                        {key:'yes1',probability: 1, description: '<span style="font-size:30px">hello1!</span>', color_img:'color-1.jpg',label_img:'label-1.png'},
+                        {key:'yes2',probability: 1, description: '<span style="font-size:30px">hello2!</span>', color_img:'color-2.jpg',label_img:'label-2.png'},
+                        {key:'yes3',probability: 1, description: '<span style="font-size:30px">hello3!</span>', color_img:'color-1.jpg',label_img:'label-3.png'},
+                        {key:'yes4',probability: 1, description: '<span style="font-size:30px">hello4!</span>', color_img:'color-2.jpg',label_img:'label-4.png'}
+                    ],
+                    result_set: 'yes1,yes2,yes3,yes4,yes1,yes2',
+                    first_throw_nr: 2,
+                    images: {
+                        base_url: 'img/wheel1/',
+                        img_size: 400
+                    },
+                    finished_callback: function(){
+                        alert('all possible rolls are done now!');
+                    }
+                });
+            </script>
+            
+            <blockquote style="background-color: transparent"><b>Code</b></blockquote>
+                <blockquote>
+                    <pre>
+
+    &lt;div id="wheel_predefined"&gt;&lt;/div&gt;
+
+    &lt;button id="btn_rotate_predefined"&gt;Rotate!&lt;/button&gt;
+
+    &lt;script type="text/javascript"&gt;
+
+        var options = {
+            possible_throws: 3,
+            value_set: [
+                {key:'yes1',probability: 1, description: '&lt;span style="font-size:30px"&gt;hello1!&lt;/span&gt;', color_img:'color-1.jpg',label_img:'label-1.png'},
+                {key:'yes2',probability: 1, description: '&lt;span style="font-size:30px"&gt;hello2!&lt;/span&gt;', color_img:'color-2.jpg',label_img:'label-2.png'},
+                {key:'yes3',probability: 1, description: '&lt;span style="font-size:30px"&gt;hello3!&lt;/span&gt;', color_img:'color-1.jpg',label_img:'label-3.png'},
+                {key:'yes4',probability: 1, description: '&lt;span style="font-size:30px"&gt;hello4!&lt;/span&gt;', color_img:'color-2.jpg',label_img:'label-4.png'}
+            ],
+            result_set: 'yes1,yes2,yes3,yes4,yes1,yes2',
+            first_throw_nr: 2,
+            images: {
+                base_url: 'img/wheel1/',
+                img_size: 400
+            },
+            finished_callback: function(){
+                alert('all possible rolls are done now!');
+            }
+        };
+
+        new Wheel('wheel_predefined','btn_rotate_predefined',options);
+    &lt;/script&gt;
+                    </pre>
+                </blockquote>
+            
+        </fieldset>
+        
+        <br/><br/>
+        
+        <fieldset>
+            
+            <legend> pure javascript, 4 answers, 2 colors, font size 20, w/ arrow, unfair (always result 1)</legend>
+            
+            
+            <script type="text/javascript">
+                wheel_create_here('Rotate me now!',{
+                    value_set: [
+                        {key:'yes1',probability: 1, description: 'hello1', color_img:'color-1.jpg',label_img:'label-1.png'},
+                        {key:'yes2',probability: 0, description: 'hello2', color_img:'color-2.jpg',label_img:'label-2.png'},
+                        {key:'yes3',probability: 0, description: 'hello3', color_img:'color-1.jpg',label_img:'label-3.png'},
+                        {key:'yes4',probability: 0, description: 'hello4', color_img:'color-2.jpg',label_img:'label-4.png'}
+                    ],
+                    images: {
+                        base_url: 'img/wheel1/',
+                        img_size: 400,
+                        select_img: 'arrow.png'
+                        
+                    },
+                    result_callback: function(throw_nr,result_key)
+                    {
+                        alert('in throw '+throw_nr+' result '+result_key);
+                    }
+                });
+            </script>
+            
+            
+            <blockquote style="background-color: transparent"><b>Code</b></blockquote>
+                <blockquote>
+                    <pre>
+
+    &lt;script type="text/javascript"&gt;
+
+        var options = {
+            value_set: [
+                {key:'yes1',probability: 1, description: 'hello1', color_img:'color-1.jpg',label_img:'label-1.png'},
+                {key:'yes2',probability: 0, description: 'hello2', color_img:'color-2.jpg',label_img:'label-2.png'},
+                {key:'yes3',probability: 0, description: 'hello3', color_img:'color-1.jpg',label_img:'label-3.png'},
+                {key:'yes4',probability: 0, description: 'hello4', color_img:'color-2.jpg',label_img:'label-4.png'}
+            ],
+            images: {
+                base_url: 'img/wheel1/',
+                img_size: 400,
+                select_img: 'arrow.png'
+
+            },
+            result_callback: function(throw_nr,result_key){
+                alert('in throw '+throw_nr+' result '+result_key);
+            }
+        };
+
+        wheel_create_here('Rotate me now!',options);
+
+    &lt;/script&gt;
+                    </pre>
+                </blockquote>
+            
+        </fieldset>
+        
+        <br/><br/>
+        
+        <fieldset>
+            
+            <legend>5 answers, 5 colors, font size 20, centered, w/ arrow, custom size, result alert</legend>
+            
+            <div style="padding-left:50%;">
+                <div id="wheel2" style="margin-left: -100px">
+                </div>
+            </div>
+            
+            <button id="btn_rotate2">Rotate!</button><br/>
+            
+            <script type="text/javascript">
+                new Wheel('wheel2','btn_rotate2',{
+                    value_set: [
+                        {key:'yes1',probability: 1, description: 'hello1!', color_img:'color-1.jpg',label_img:'label-1.png'},
+                        {key:'yes2',probability: 1, description: 'hello2!', color_img:'color-2.jpg',label_img:'label-2.png'},
+                        {key:'yes3',probability: 1, description: 'hello3!', color_img:'color-3.jpg',label_img:'label-3.png'},
+                        {key:'yes4',probability: 1, description: 'hello4!', color_img:'color-4.jpg',label_img:'label-4.png'},
+                        {key:'yes5',probability: 1, description: 'hello5!', color_img:'color-5.jpg',label_img:'label-5.png'}
+                    ],
+                    images: {
+                        base_url: 'img/wheel2/',
+                        select_img: 'arrow.png',
+                        img_size: 200
+                    },
+                    result_callback: function(throw_nr,result_key)
+                    {
+//                        alert('in throw '+throw_nr+' result '+result_key);
+                    }
+                });
+            </script>
+            
+            
+            <blockquote style="background-color: transparent"><b>Code</b></blockquote>
+                <blockquote>
+                    <pre>
+
+    <span class="comment">&lt;!-- the outer div and custom styling are used to center the wheel
+    (NOTE the smaller margin-left value as to before, half of the image size)--></span>
+    &lt;div style="padding-left:50%;"&gt;
+        &lt;div id="wheel2" style="margin-left: -100px"&gt;&lt;/div&gt;
+    &lt;/div &gt;
+
+    &lt;button id="btn_rotate2"&gt;Rotate!&lt;/button&gt;
+
+    &lt;script type="text/javascript"&gt;
+
+        var options = {
+            value_set: [
+                {key:'yes1',probability: 1, description: 'hello1!', color_img:'color-1.jpg',label_img:'label-1.png'},
+                {key:'yes2',probability: 1, description: 'hello2!', color_img:'color-2.jpg',label_img:'label-2.png'},
+                {key:'yes3',probability: 1, description: 'hello3!', color_img:'color-3.jpg',label_img:'label-3.png'},
+                {key:'yes4',probability: 1, description: 'hello4!', color_img:'color-4.jpg',label_img:'label-4.png'},
+                {key:'yes5',probability: 1, description: 'hello5!', color_img:'color-5.jpg',label_img:'label-5.png'}
+            ],
+            images: {
+                base_url: 'img/wheel2/',
+                select_img: 'arrow.png',
+                img_size: 200
+            }
+        };
+
+        new Wheel('wheel2','btn_rotate2',options);
+    &lt;/script&gt;
+                    </pre>
+                </blockquote>
+            
+        </fieldset>
+        
+        <br/><br/>
+        
+        <fieldset>
+            
+            <legend>16 answers, 2 colors, font size 12, w/ arrow</legend>
+            
+            <div id="wheel3"></div>
+            
+            <button id="btn_rotate3">Rotate!</button>
+            
+            <script type="text/javascript">
+                new Wheel('wheel3','btn_rotate3',{
+                    value_set: [
+                        {key:'yes1',probability: 1, description: 'hello1!', color_img:'color-1.jpg',label_img:'label-1.png'},
+                        {key:'yes2',probability: 1, description: 'hello2!', color_img:'color-2.jpg',label_img:'label-2.png'},
+                        {key:'yes3',probability: 1, description: 'hello3!', color_img:'color-1.jpg',label_img:'label-3.png'},
+                        {key:'yes4',probability: 1, description: 'hello4!', color_img:'color-2.jpg',label_img:'label-4.png'},
+                        {key:'yes5',probability: 1, description: 'hello5!', color_img:'color-1.jpg',label_img:'label-5.png'},
+                        {key:'yes6',probability: 1, description: 'hello6!', color_img:'color-2.jpg',label_img:'label-6.png'},
+                        {key:'yes7',probability: 1, description: 'hello7!', color_img:'color-1.jpg',label_img:'label-7.png'},
+                        {key:'yes8',probability: 1, description: 'hello8!', color_img:'color-2.jpg',label_img:'label-8.png'},
+                        {key:'yes9',probability: 1, description: 'hello9!', color_img:'color-1.jpg',label_img:'label-9.png'},
+                        {key:'yes10',probability: 1, description: 'hello10!', color_img:'color-2.jpg',label_img:'label-10.png'},
+                        {key:'yes11',probability: 1, description: 'hello11!', color_img:'color-1.jpg',label_img:'label-11.png'},
+                        {key:'yes12',probability: 1, description: 'hello12!', color_img:'color-2.jpg',label_img:'label-12.png'},
+                        {key:'yes13',probability: 1, description: 'hello13!', color_img:'color-1.jpg',label_img:'label-13.png'},
+                        {key:'yes14',probability: 1, description: 'hello14!', color_img:'color-2.jpg',label_img:'label-14.png'},
+                        {key:'yes15',probability: 1, description: 'hello15!', color_img:'color-1.jpg',label_img:'label-15.png'},
+                        {key:'yes16',probability: 1, description: 'hello16!', color_img:'color-2.jpg',label_img:'label-16.png'}
+                    ],
+                    images: {
+                        base_url: 'img/wheel3/',
+                        select_img: 'arrow.png',
+                        img_size: 400
+                    }
+                });
+            </script>
+            
+            
+            <blockquote style="background-color: transparent"><b>Code</b></blockquote>
+                <blockquote>
+                    <pre>
+
+    
+    &lt;div id="wheel3" style="margin-left: -100px"&gt;&lt;/div&gt;
+
+    &lt;button id="btn_rotate3"&gt;Rotate!&lt;/button&gt;
+
+    &lt;script type="text/javascript"&gt;
+
+        var options = {
+            value_set: [
+                {key:'yes1',probability: 1, description: 'hello1!', color_img:'color-1.jpg',label_img:'label-1.png'},
+                {key:'yes2',probability: 1, description: 'hello2!', color_img:'color-2.jpg',label_img:'label-2.png'},
+                {key:'yes3',probability: 1, description: 'hello3!', color_img:'color-1.jpg',label_img:'label-3.png'},
+                {key:'yes4',probability: 1, description: 'hello4!', color_img:'color-2.jpg',label_img:'label-4.png'},
+                {key:'yes5',probability: 1, description: 'hello5!', color_img:'color-1.jpg',label_img:'label-5.png'},
+                {key:'yes6',probability: 1, description: 'hello6!', color_img:'color-2.jpg',label_img:'label-6.png'},
+                {key:'yes7',probability: 1, description: 'hello7!', color_img:'color-1.jpg',label_img:'label-7.png'},
+                {key:'yes8',probability: 1, description: 'hello8!', color_img:'color-2.jpg',label_img:'label-8.png'},
+                {key:'yes9',probability: 1, description: 'hello9!', color_img:'color-1.jpg',label_img:'label-9.png'},
+                {key:'yes10',probability: 1, description: 'hello10!', color_img:'color-2.jpg',label_img:'label-10.png'},
+                {key:'yes11',probability: 1, description: 'hello11!', color_img:'color-1.jpg',label_img:'label-11.png'},
+                {key:'yes12',probability: 1, description: 'hello12!', color_img:'color-2.jpg',label_img:'label-12.png'},
+                {key:'yes13',probability: 1, description: 'hello13!', color_img:'color-1.jpg',label_img:'label-13.png'},
+                {key:'yes14',probability: 1, description: 'hello14!', color_img:'color-2.jpg',label_img:'label-14.png'},
+                {key:'yes15',probability: 1, description: 'hello15!', color_img:'color-1.jpg',label_img:'label-15.png'},
+                {key:'yes16',probability: 1, description: 'hello16!', color_img:'color-2.jpg',label_img:'label-16.png'}
+            ],
+            images: {
+                base_url: 'img/wheel3/',
+                select_img: 'arrow.png',
+                img_size: 400
+            }
+        };
+
+        new Wheel('wheel3','btn_rotate3',options);
+    &lt;/script&gt;
+                    </pre>
+                </blockquote>
+            
+            
+        </fieldset>
+        
+        
+        
+        <fieldset>
+            
+            <legend>16 answers, 2 colors, font size 12, w/ arrow</legend>
+            
+            <div id="wheel_stat"></div>
+            
+            <button id="btn_rotate_stat">Rotate!</button>
+            
+            <script type="text/javascript">
+                
+                var results = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+                
+                new Wheel('wheel_stat','btn_rotate_stat',{
+                    value_set: [
+                        {key:'0',probability: 1, description: 'hello1!', color_img:'color-1.jpg',label_img:'label-1.png'},
+                        {key:'1',probability: 2, description: 'hello2!', color_img:'color-2.jpg',label_img:'label-2.png'},
+                        {key:'2',probability: 3, description: 'hello3!', color_img:'color-1.jpg',label_img:'label-3.png'},
+                        {key:'3',probability: 4, description: 'hello4!', color_img:'color-2.jpg',label_img:'label-4.png'},
+                        {key:'4',probability: 5, description: 'hello5!', color_img:'color-1.jpg',label_img:'label-5.png'},
+                        {key:'5',probability: 6, description: 'hello6!', color_img:'color-2.jpg',label_img:'label-6.png'},
+                        {key:'6',probability: 7, description: 'hello7!', color_img:'color-1.jpg',label_img:'label-7.png'},
+                        {key:'7',probability: 8, description: 'hello8!', color_img:'color-2.jpg',label_img:'label-8.png'},
+                        {key:'8',probability: 9, description: 'hello9!', color_img:'color-1.jpg',label_img:'label-9.png'},
+                        {key:'9',probability: 10, description: 'hello10!', color_img:'color-2.jpg',label_img:'label-10.png'},
+                        {key:'10',probability: 11, description: 'hello11!', color_img:'color-1.jpg',label_img:'label-11.png'},
+                        {key:'11',probability: 12, description: 'hello12!', color_img:'color-2.jpg',label_img:'label-12.png'},
+                        {key:'12',probability: 13, description: 'hello13!', color_img:'color-1.jpg',label_img:'label-13.png'},
+                        {key:'13',probability: 14, description: 'hello14!', color_img:'color-2.jpg',label_img:'label-14.png'},
+                        {key:'14',probability: 15, description: 'hello15!', color_img:'color-1.jpg',label_img:'label-15.png'},
+                        {key:'15',probability: 16, description: 'hello16!', color_img:'color-2.jpg',label_img:'label-16.png'}
+                    ],
+                    images: {
+                        base_url: 'img/wheel3/',
+                        select_img: 'arrow.png',
+                        img_size: 400
+                    },
+                    result_callback: function(throw_nr,result_key)
+                    {
+                        results[result_key]++;
+                        if (throw_nr >= 500)
+                            {
+                                alert('done!');
+                            }
+                            else
+                                {
+//                                    alert('again!');
+                                    var self=this;
+                                    window.setTimeout(function(){self.rotate()},10);
+                                }
+                    }
+                });
+            </script>
+            
+        </fieldset>
+    </body>
+</html>

@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Javascript Dice</title>
+        
+        <meta charset="UTF-8"/>
+        
+        <meta name="author" content="Philip Tschiemer"/>
+        
+        <style type="text/css">
+            blockquote {
+                font-family: "Courier New",Courier,monospace;
+                background-color: lightgray;
+                padding: 3px;
+            }
+            
+            .comment {
+                color: green;
+            }
+        </style>
+        
+        <!-- dice javascript -->
+        
+        <!-- include this line anywhere in document -->
+        <script type="text/javascript" src="dice.js"></script>
+        
+        <!-- / dice javascript -->
+        
+    </head>
+    <body>
+        
+        
+        
+        <h1>Javascript Dice</h1>
+        
+        <h2>License</h2>
+        
+        
+        <dl>
+            <dt>Copyright</dt>
+            <dd>2013 ETH Zurich, www.socio.ethz.ch, c/o Marc Hoeglinger &lt;hoeglinger&#64;soz.gess.ethz.ch&gt;</dd>
+            <dt>License</dt>
+            <dd>GPL V2, <a href="http://www.gnu.org/licenses/gpl-2.0.txt">http://www.gnu.org/licenses/gpl-2.0.txt</a></dd>
+            <dt>Author</dt>
+            <dd>Philip Tschiemer &lt;tschiemer&#64;filou.se&gt;</dd>
+            <dt>Link</dt>
+            <dd><a href="https://github.com/tschiemer/qualtrics-gambling">https://github.com/tschiemer/qualtrics-gambling</a></dd>
+        </dl>
+        
+        <h2>Setup</h2>
+            
+        <p>To load the dice Javascript library please insert the following line  <em>once</em> in your html site:</p>
+        <blockquote>
+            <pre>
+    &lt;!-- dice javascript --&gt;
+
+    &lt;!-- include this line anywhere in document --&gt;
+    &lt;script type="text/javascript" src="http://www.your.url.com/your/path/dice.js"&gt;&lt;/script&gt;
+
+    &lt;!-- / dice javascript --&gt;
+            </pre>
+        </blockquote>
+            
+        <p>The dice then can be initialized in two ways:</p>
+
+        <ol>
+            <li>Using pure Javascript Objects, resp one call.</li>
+            <li>Setting up HTML elements and call Javascript on these.</li>
+        </ol>
+            
+        <h3>Pure Javascript approach</h3>
+            <p>For this approach simply the following must be inserted into the HTML document</p>
+            
+            <blockquote>
+                <pre>
+    &lt;script type="text/javascript"&gt;
+    var my_options = {
+        // options are explained below
+    };
+    dice_create_here('My Throw Button Label',my_options);
+    &lt;/script&gt;
+                </pre>
+            </blockquote>
+            
+            <p>Thereby a dice is created exactly in the position where the code is inserted. Along with the dice a throw button having the label <em>My Throw Button Label</em> is created.</p>
+
+            
+
+            <h3>HTML/Javascript approach</h3>
+            
+            <p>In case you want to apply custom styling to your dice (eg. define specific positioning) then you can set the second appreach where you set the dive anchor and buttons as desired, eg as follows:</p>
+            
+            <blockquote>
+                <pre>
+    &lt;div id="my_dice_id"&gt;&lt;/div&gt;
+
+    &lt;br/&gt; &lt;!-- Only needed to make a new line, such that it's prettier. --&gt;
+    
+    &lt;button id="my_throw_button_id"&gt;My Throw Button Label&lt;/button&gt;
+                </pre>
+            </blockquote>
+            
+            <p>.. and initialize the dice (add the code <em>AFTER</em> the HTML!) as follows:</p>
+            
+            <blockquote>
+                <pre>
+    &lt;script type="text/javascript"&gt;
+
+    var my_options = {
+    // ... options explaiend below
+    };
+
+    new Dice('my_dice_id','my_throw_button_id',my_options);
+
+    &lt;/script&gt;
+                </pre>
+            </blockquote>
+            
+            <h3>Options</h3>
+            
+            <p>The dice options are set through as fields of an object, following you see an example with all possibel options (remember, this is inside the <em>script</em>-tag):</p>
+            
+            <blockquote>
+                <pre>
+    var my_options = {
+
+        <span class="comment">// Number of possible throws before the dice (and buttons) are deactived.
+        // Optionl, default = 0.
+        // 0        infinite throws / dice will never be deactivated
+        //          or if a result_set is given, will be thrown exactly the remaining
+        //          number of throws considering the first_throw_nr
+        // N > 0    exactly N throws
+        //          ATTENTION: if a result set is given aswell as a first_throw_nr and the 
+        //          total throw count can grow highger than the result_set count, the drawn 
+        //          results will be drawn according to the fallback_strategy.
+        //          </span>
+        possible_throws: 0, 
+
+        <span class="comment">// Fallback strategy to use, if for a given result set and an expected
+        // number of results, there are too few results given.
+        // Optional, default: wrap-around. Possible values:
+        //      'wrap-around'   Drawing will begin from the first given result again
+        //      'random'        A random result according to the given probabilities will be drawn.</span>
+        fallback_strategy: 'wrap-around',
+
+        <span class="comment">// List of all possible values and their probablities.
+        // Required.
+        // The probabilities will be normalized, ie actual probability = given probability / sum of all probabilities
+        // The key property is used both to identify the result and to load the correct result image resource.</span>
+        value_set : [
+            {key: "1", probability: 1},
+            {key: "2", probability: 1},
+            {key: "3", probability: 1},
+            {key: "4", probability: 1},
+            {key: "5", probability: 1},
+            {key: "6", probability: 1}
+        ],
+
+        <span class="comment">// List of predefined result keys
+        // Optional
+        // If given the dice can automatically only be thrown as many times as there are given keys.
+        // Can take two forms, the values must be strings as used for keys in the value set, otherwise an error occurs:
+        // Form 1 : array of keys</span>
+        result_set: ['1','2','1','2'],
+
+        <span class="comment">//Form 2: Comma separated (string) list</span>
+        result_set: '1,2,3,4,5,6',
+
+        <span class="comment">// Index (starting at 0) of result_set keys to use for this sequence.
+        // Optional (default = 0), natural number incl. zero.</span>
+        <span class="comment">// Static example, in this case '3' would be the first result</span>
+        first_throw_nr: 2, 
+        <span class="comment">// Dynamic example using session cookies to remember the current throw count (to avoid repetitions)</span>
+        first_throw_nr:getCookie('throw_nr',0),
+
+        <span class="comment">// Roll animation duration in seconds
+        // Optional, default = 1.
+        // MUST NOT be 0 (zero)
+
+        // Can be a number as follows:
+        // roll_duration: 1, 
+        // .. or can be a function to vary duration, as follows:</span>
+        roll_duration: function(){ return 1 + 3*(1 - Math.random()); }, // example duration drawn randomly from [1, 4]
+
+        <span class="comment">// Generic image settings
+        // Required</span>
+        images : {
+
+            <span class="comment">// Base URL of the base folder where your images reside.
+            // Required.
+            // MUST have a trailing slash</span>
+            base_url : 'http://www.your-domain.com/your/image/path/',
+
+            <span class="comment">// Image extension used for result images
+            // Required.
+            // Result images are loaded from images.base_url + result.key + images.ext
+            // eg. for result 6: http://www.your-domain.com/your/image/path/6.png</span>
+            ext  : '.png',
+
+            <span class="comment">// Image to show initially.
+            // Optional.</span>
+            init : 'init.png'
+        },
+
+        <span class="comment">// Options related to animation
+        // Optional (ie can be ommitted)</span>
+        animation: {
+
+            <span class="comment">// Rotate image if possible? (default: true, ie if omitted, will rotate)</span>
+            rotate: true,
+
+            <span class="comment">// Swap Images? (default: true, ie if omitted will swap images randomly during throw animation)</span>
+            swap_images: true,
+
+            <span class="comment">// Animation images to use instead of result images.
+            // If omitted or array of zero elements, will use result images.</span>
+            images: ['smiley.png','smiley-green.png','smiley-rosa.png']
+        },
+
+        <span class="comment">// Callback function to handle results
+        // Optional
+        // Will be called at each throw.
+        // Passed arguments is the throw number (inclusive this throw, it will be the n-th one)
+        // and  the result key as defined in <em>value_set</em>.</span>
+        result_callback: function(throw_nr, result_key){
+            <span class="comment">// your handling here</span>
+
+            <span class="comment">//If using a defined result set, and you want to avoid reusing
+            // the same sequence again, you might consider setting a cookie to remember which throw
+            // exactly it is.
+            // Attention: please make sure to delete the cookie at some point, best before the
+            // cookie is instantiated</span>
+            setCookie('throw_nr',throw_nr + this.first_throw_nr);
+        },
+
+        <span class="comment">// Callback function to be called upon permanent deactivation of dice
+        // Optional</span>
+        finished_callback: function(){
+            <span class="comment">// your function here</span>
+        }
+    };
+                </pre>
+            </blockquote>
+            
+            <p>In the following you find a minimized and commentless version of the required options:</p>
+            
+            
+            <blockquote>
+                <pre>
+    var my_options = {
+        value_set : [
+            {key: "1", probability: 1},
+            {key: "2", probability: 1},
+            {key: "3", probability: 1},
+            {key: "4", probability: 1},
+            {key: "5", probability: 1},
+            {key: "6", probability: 1}
+        ],
+        images : {
+            base_url : 'http://www.your-domain.com/your/image/path/',
+            ext  : '.png'
+        }
+    };
+                </pre>
+            </blockquote>
+            
+            
+            <h3>Qualtrics Integration</h3>
+            
+            <p>In the following you will find three full examples of integrating the dice into Qualtrics, simpler variants can be used by apropriate reduction.</p>
+            
+            <p>As a general note, any linked resources as javacsript or image files should reside on a secure
+            server accessible through HTTP<b>S</b>, otherwise browsers might block the content or give warnings.</p>
+            
+            
+            <h4>Qualtrics Example: 1 dice, simple integration</h4>
+            
+            <p>The goal is to have a simple dice that does nothing else than just being there and being throwable (and stores the result of each throw in a Qualtrics embedded field).</p>
+            
+            
+            <blockquote style="background-color:transparent;"><b>Question Text inserted as HTML</b></blockquote>
+            <blockquote>
+                <pre>
+    <span class="comment">&lt;!-- include dice source.--&gt;</span>
+    &lt;script src="http://www.your-domain.com/some-path/dice/dice.js" type="text/javascript"&gt;&lt;/script&gt;
+
+    <span class="comment">&lt;!-- an alternative approach to encorporating the javascript source is to embed it directly, uncomment as necessary --&gt;</span>
+    &lt;script type="text/javascript"&gt;
+    .. include complete dice.js file here    
+    &lt;/script&gt;
+
+                    
+    <span class="comment">&lt;!-- Actual dice html here --&gt;</span>
+    &lt;div id="dice"&gt;&lt;/div&gt;
+    &lt;br&gt;
+    &lt;button id="throw"&gt;Throw dice!&lt;/button&gt;
+
+    <span class="comment">&lt;!-- Instantiate dice here. As results are not stored, it need not be added to a javascript block. --&gt;</span>
+    &lt;script type="text/javascript"&gt;
+    new Dice('dice','throw',{
+        value_set: [
+            {key: '1',probability: 1},
+            {key: '2',probability: 1},
+            {key: '3',probability: 1},
+            {key: '4',probability: 1},
+            {key: '5',probability: 1},
+            {key: '6',probability: 1}
+        ],
+        images : {
+            base_url: 'http://www.your-domain.com/some-path/dice/img/',
+            ext: '.png',
+            init: 'qmark1.png'
+        },
+        result_callback: function(throw_nr,result_key){
+
+            <span class="comment">// Save result to embedded data field (need
+            //not be set through survey flow settings)</span>
+            Qualtrics.SurveyEngine.setEmbeddedData('result_matrix_embedded'+throw_nr, result_key);
+
+        }
+    });
+    &lt;/script&gt;
+
+            </blockquote>
+            
+            
+            <h4>Qualtrics Example: 3 pages whereof 2 with 1 dice, (common) predefined result set without repetition</h4>
+            
+            <p>The goal is to have a simple dice that use predefined results (ex. a reliable randomized sequence) without repetition (inclusive page reload) and storing the results in given data fields (page 1: indexed with 1-3, page 2: indexed with 4-5).</p>
+            
+            <blockquote style="background-color:transparent;"><b>Page 1: Question Text inserted as HTML</b></blockquote>
+            <blockquote>
+                <pre>
+    <span class="comment">&lt;!-- include cookie source. --&gt;</span>
+    &lt;script src="http://www.your-domain.com/some-path/dice/cookiehelper.js" type="text/javascript"&gt;&lt;/script&gt;
+
+    <span class="comment">&lt;!-- reset session cookie counter 
+    This is not per se necessary, but recommended if you want to use a predefined sequence, this might be an approach
+    But essentially, it depends on your strategy.  --&gt;</span>
+    deleteCookie('cookie_throw_nr');
+            </blockquote>
+            
+            <blockquote style="background-color:transparent;"><b>Page 2: Question Text inserted as HTML</b></blockquote>
+            <blockquote>
+                <pre>
+    <span class="comment">&lt;!-- include dice source.--&gt;</span>
+    &lt;script src="http://www.your-domain.com/some-path/dice/dice.js" type="text/javascript"&gt;&lt;/script&gt;
+    <span class="comment">&lt;!-- include cookie source. --&gt;</span>
+    &lt;script src="http://www.your-domain.com/some-path/dice/cookiehelper.js" type="text/javascript"&gt;&lt;/script&gt;
+
+                    
+    <span class="comment">&lt;!-- Actual dice html here --&gt;</span>
+    &lt;div id="dice"&gt;&lt;/div&gt;
+    &lt;br&gt;
+    &lt;button id="throw"&gt;Throw dice!&lt;/button&gt;
+
+    <span class="comment">&lt;!-- Instantiate dice here. As results are not stored, it need not be added to a javascript block. --&gt;</span>
+    &lt;script type="text/javascript"&gt;
+    new Dice('dice','throw',{
+        value_set: [
+            {key: '1',probability: 1},
+            {key: '2',probability: 1},
+            {key: '3',probability: 1},
+            {key: '4',probability: 1},
+            {key: '5',probability: 1},
+            {key: '6',probability: 1}
+        ],
+        possible_throws: 6,
+        <span class="comment">//So the results will be going from 1 to 6 with five 6s in a row.
+        // For Qualtrics you might consider using a specific sequence which is bound to a user</span>
+        result_set: '1,2,3,4,5,6,6,6,6,6', 
+        first_throw_nr: getCookie('cookie_throw_nr',${e://Field/qualtrics_throw_nr}+0), <span class="comment">Using two approaches to get the first throw index</span>
+        fallback_strategy: 'random', <span class="comment">// If more throws are necessary just use Javascript's Math.random()</span>
+        images : {
+            base_url: 'http://www.your-domain.com/some-path/dice/img/',
+            ext: '.png',
+            init: 'qmark1.png'
+        },
+        result_callback: function(throw_nr,result_key){
+
+            <span class="comment">// Save result to embedded data field (need
+            //not be set through survey flow settings)</span>
+            Qualtrics.SurveyEngine.setEmbeddedData('result_matrix_embedded'+throw_nr, result_key);
+
+            <span class="comment">// You could use this approach</span>
+            Qualtrics.SurveyEngine.setEmbeddedData('qualtrics_throw_nr', throw_nr + this.first_throw_nr);
+
+            <span class="comment">// .. or this one using cookies (might be more reliable)</span>
+            setCookie('result_throw_nr',throw_nr + this.first_throw_nr);
+        }
+    });
+    &lt;/script&gt;
+
+            </blockquote>
+            
+            <blockquote style="background-color:transparent;"><b>Page 3: Question Text inserted as HTML</b></blockquote>
+            <blockquote>
+                <pre>
+    <span class="comment">&lt;!-- include dice source.--&gt;</span>
+    &lt;script src="http://www.your-domain.com/some-path/dice/dice.js" type="text/javascript"&gt;&lt;/script&gt;
+    <span class="comment">&lt;!-- include cookie source. --&gt;</span>
+    &lt;script src="http://www.your-domain.com/some-path/dice/cookiehelper.js" type="text/javascript"&gt;&lt;/script&gt;
+
+                    
+    <span class="comment">&lt;!-- Actual dice html here --&gt;</span>
+    &lt;div id="dice"&gt;&lt;/div&gt;
+    &lt;br&gt;
+    &lt;button id="throw"&gt;Throw dice!&lt;/button&gt;
+
+    <span class="comment">&lt;!-- Instantiate dice here. As results are not stored, it need not be added to a javascript block. --&gt;</span>
+    &lt;script type="text/javascript"&gt;
+    new Dice('dice','throw',{
+        value_set: [
+            {key: '1',probability: 1},
+            {key: '2',probability: 1},
+            {key: '3',probability: 1},
+            {key: '4',probability: 1},
+            {key: '5',probability: 1},
+            {key: '6',probability: 1}
+        ],
+        possible_throws: 4,
+        result_set: '1,2,3,4,5,6,6,6,6,6', <span class="comment">//So the results will be going from 1 to 6 with five 6s in a row</span>
+        first_throw_nr: getCookie('cookie_throw_nr',${e://Field/qualtrics_throw_nr}+0), <span class="comment">Using two approaches to get the first throw index</span>
+        fallback_strategy: 'wrap-around', <span class="comment">// If more throws are necessary wrap around going through the same sequence again. (default value)</span>
+        images : {
+            base_url: 'http://www.your-domain.com/some-path/dice/img/',
+            ext: '.png',
+            init: 'qmark1.png'
+        },
+        result_callback: function(throw_nr,result_key){
+
+            <span class="comment">// Save result to embedded data field (need
+            //not be set through survey flow settings)</span>
+            <span style='color:red'>//NOTE: to use the correct index there is an offset being added to the throw_nr</span>
+            Qualtrics.SurveyEngine.setEmbeddedData('result_matrix_embedded'+(throw_nr+3), result_key);
+
+            <span class="comment">// You could use this approach</span>
+            Qualtrics.SurveyEngine.setEmbeddedData('qualtrics_throw_nr', throw_nr + this.first_throw_nr);
+
+            <span class="comment">// .. or this one using cookies (might be more reliable)</span>
+            setCookie('result_throw_nr',throw_nr + this.first_throw_nr);
+        }
+    });
+    &lt;/script&gt;
+
+            </blockquote>
+            
+            <p>In case a user goes through the form without reloading any page, she would end up with the following sequence: Page 1: 1,2,3,4,5,6 Page 2: 6,6,6,6</p>
+            <p>In case a user goes through the form but reloads the second page after doing the throws but before submitting the form, the following sequence would result: Page 1: 1,2,3,4,5,6 Page 2: 1,2,3,4</p>
+            
+            
+            <h4>Qualtrics Example: Integrated, hidden multiple results</h4>
+            
+            <p>Goal is to have three seperate dices, each can be thrown once and stores its result into a hidden data matrix. Users have a second data matrix question to fill in their answers.</p>
+            
+            <p>The question is of type <em>Matrix Table</em> with settings: </p>
+            
+            <ul>
+                <li>Statements = 3</li>
+                <li>Scale Points = 6</li>
+                <li>Labels = 0</li>
+                <li>Matrix Type = Likert</li>
+                <li>Answers = Single Answer</li>
+                <li>Validation Type = None</li>
+            </ul>
+            
+            <p>In this example the dice results are stored twofold:</p>
+            <ol>
+                <li>Just like any other questionnaire data and can be retrieved within the questionnaire  like any other data fields (the results must not  but can be defined as embedded data to be accessible), eg:
+                    
+                    <blockquote>${q://QID21/ChoiceNumericEntryValue/1}</blockquote>
+                </li>
+                <li>
+                    The throw results will be written to an embedded data field which can be read as follows:
+                
+                    <blockquote>${e://Field/result_matrix_embedded1}</blockquote>
+                </li>
+            </ol
+            
+            
+            <p>Assume the the question to be Question 21, Q21 respectively (as defined by the Qualtrics system).</p>
+            
+            <blockquote style="background-color:transparent;"><b>Question Text inserted as HTML</b></blockquote>
+            <blockquote>
+                <pre>
+    <span class="comment">&lt;!-- include dice source.--&gt;</span>
+    &lt;script src="http://www.your-domain.com/some-path/dice/dice.js" type="text/javascript"&gt;&lt;/script&gt;
+
+    <span class="comment">&lt;!-- an alternative approach to encorporating the javascript source is to embed it directly, uncomment as necessary --&gt;</span>
+    &lt;script type="text/javascript"&gt;
+    .. include complete dice.js file here    
+    &lt;/script&gt;
+
+    <span class="comment">&lt;!--
+    incorporate this hidden decoy button to stop random clicks on the question area
+    to trigger the first button from being fired unnecessarily
+    --&gt;</span>
+    &lt;button onclick="return false;" style="display:none"&gt;&lt;/button&gt;
+
+    <span class="comment">&lt;!-- the table is only needed to present the dices in a row, it does not have any functional meaning --&gt;</span>
+    &lt;table&gt;
+        &lt;tbody&gt;
+            &lt;tr&gt;
+                &lt;td&gt;
+                    
+                    <span class="comment">&lt;!-- Actual dice html here --&gt;</span>
+                    &lt;div id="dice1"&gt;&lt;/div&gt;
+                    &lt;br&gt;
+                    &lt;button id="throw1"&gt;Throw dice 1&lt;/button&gt;
+
+                &lt;/td&gt;
+                &lt;td&gt;
+                    
+                    &lt;div id="dice2"&gt;&lt;/div&gt;
+                    &lt;br&gt;
+                    &lt;button id="throw2"&gt;Throw dice 2&lt;/button&gt;
+
+                &lt;/td&gt;
+                &lt;td&gt;
+                    
+                    &lt;div id="dice3"&gt;&lt;/div&gt;
+                    &lt;br&gt;
+                    &lt;button id="throw3"&gt;Throw dice 3&lt;/button&gt;
+
+                &lt;/td&gt;
+            &lt;/tr&gt;
+        &lt;/tbody&gt;
+    &lt;/table&gt;
+
+    <span class="comment">&lt;!-- to hide the actual data entry matrix
+        ATTENTION if you make this question mandatory make sure that users without
+        javascript (that cannot use the dice) do not face this question, otherwise
+        they will face a required question they cannot answer
+    --&gt;</span>
+    &lt;style type="text/css"&gt;
+    #QID21 div.QuestionBody {display:none}    
+    &lt;/style&gt;
+                </pre>
+            </blockquote>
+            
+            
+            <blockquote style="background-color:transparent;"><b>Javascript added to question.</b></blockquote>
+            <blockquote>
+                <pre>
+
+    Qualtrics.SurveyEngine.addOnload(function()
+    {
+      <span class="comment">// Required for the callback functions to work.</span>
+      var self = this;
+
+      <span class="comment">// For our comfort, the common settings are predefined.</span>
+      var value_set = [
+          {key:"1",probability:1},
+          {key:"2",probability:1},
+          {key:"3",probability:1},
+          {key:"4",probability:1},
+          {key:"5",probability:1},
+          {key:"6",probability:1}
+        ];
+
+      var images = {
+        base_url:'http://www.your-domain.com/some-path/dice/img/',
+        ext:'.png',
+        init: 'qmark1.png'
+      };
+
+      <span class="comment">// Instantiate dice 1</span>
+       new Dice("dice1","throw1",{
+        possible_throws: 1,
+        value_set: value_set,
+        images: images,
+        result_callback: function(throw_nr,result_key){
+          
+            <span class="comment">// Save result to embedded data field (need
+            //not be set through survey flow settings)</span>
+            Qualtrics.SurveyEngine.setEmbeddedData('result_matrix_embedded'+throw_nr, result_key);
+
+            <span class="comment">// Set choice by result key, choice index respectively
+            // Attention: choices must be in correct order (ie choice 1 must have value 1, etc)</span>
+            self.setChoiceValue('1', result_key, true);
+
+            <span class="comment">// should you use only 1 dice that can be thrown multiple times
+            // you can use &lt;throw_nr&gt; instead of the predefined '1'
+            // self.setChoiceValue(throw_nr,result_key,true);</span>
+
+            <span class="comment">// Optionally change the label of the throw button.</span>
+            document.getElementById('throw1').innerHTML = 'Thank you!';
+            <span class="comment">// .. or hide it altogether.</span>
+            document.getElementById('throw1').style.visibility = 'hidden';
+          
+        }
+       });
+
+       <span class="comment">// Instantiate dice 2</span>
+       new Dice("dice2","throw2",{
+        possible_throws: 1,
+        value_set: value_set,
+        images: images,
+        result_callback: function(throw_nr,result_key){
+          self.setChoiceValue('2', result_key, true);
+        }
+       });
+
+
+       <span class="comment">// Instantiate dice 3</span>
+       new Dice("dice3","throw3",{
+        possible_throws: 1,
+        value_set: value_set,
+        images: images,
+        result_callback: function(throw_nr,result_key){
+          self.setChoiceValue('3', result_key, true);
+        }
+       });
+
+    });​
+
+                </pre>
+            </blockquote>
+            
+            
+            
+            
+            <h2>Examples</h2>
+        
+        <fieldset>
+            <legend>Example HTML predefined.</legend>
+
+            <div id="dice" style="margin: 0px auto;"></div>
+
+            <br/>
+            
+            <button id="dice_throw">Throw Dice!</button>
+
+            
+            <script type="text/javascript">
+
+                // demo loader
+                
+                var default_options = {
+                        possible_throws: 0, // 0 : infinite throws (default), n > 0 : n throws
+                        value_set : [ // probabilities will be normalized, ie:
+                                      //    actual probability = given probability / sum of all probabilities
+                            {key: "1", probability: 1},
+                            {key: "2", probability: 1},
+                            {key: "3", probability: 1},
+                            {key: "4", probability: 1},
+                            {key: "5", probability: 1},
+                            {key: "6", probability: 1}
+                        ],
+                        //roll_duration: 1, // dice is animated this long
+                        roll_duration: function(){ return 1 + 3*(1 - Math.random()); }, // example duration drawn randomly from [1, 4]
+                        images : {
+                            base_url : 'img/',
+                            ext  : '.png',
+                            init : 'qmark1.png'
+                        },
+                        result_callback: function(throw_nr, result_key){
+                            alert('Throw nr '+throw_nr + ' has result ' + result_key);
+                        }
+                    };
+
+                new Dice('dice','dice_throw',default_options);
+
+            </script>
+            
+        </fieldset>
+        
+        <br/><br/>
+        
+         <fieldset>
+            <legend>Example HTML predefined, with predefined result sequence.</legend>
+
+            <div id="dice_result_sequence" style="margin: 0px auto;"></div>
+
+            <br/>
+            
+            <button id="dice_throw_result_sequence">Throw Dice!</button>
+
+            
+            <script type="text/javascript">
+
+                // demo loader
+                
+                var options_result_sequence = {
+                        value_set : [ // probabilities will be normalized, ie:
+                                      //    actual probability = given probability / sum of all probabilities
+                            {key: "1", probability: 1},
+                            {key: "2", probability: 1},
+                            {key: "3", probability: 1},
+                            {key: "4", probability: 1},
+                            {key: "5", probability: 1},
+                            {key: "6", probability: 1}
+                        ],
+                        result_set: '1,2,3,4,5,6',
+                        possible_throws: 6, // 0 : infinite throws (default), n > 0 : n throws
+                        first_throw_nr:2,
+                        fallback_strategy: 'wrap-around',
+                        
+                        //roll_duration: 1, // dice is animated this long
+                        roll_duration: function(){ return 1 + 3*(1 - Math.random()); }, // example duration drawn randomly from [1, 4]
+                        images : {
+                            base_url : 'img/',
+                            ext  : '.png',
+                            init : 'qmark1.png'
+                        },
+                        result_callback: function(throw_nr, result_key){
+                            alert('Throw nr '+ throw_nr + ' has result ' + result_key);
+                        },
+                        finished_callback: function(){
+                            alert('No more throws are possible');
+                        }
+                    };
+
+                var dice_result_sequence = new Dice('dice_result_sequence','dice_throw_result_sequence',options_result_sequence);
+
+            </script>
+            
+        </fieldset>
+        
+        <br/><br/>
+        
+        
+        <fieldset>
+            <legend>Example HTML predefined, unfair dice (6 with probability 0.66).</legend>
+
+            <div id="dice_unfair" style="margin: 0px auto;"></div>
+
+            <br/>
+            
+            <button id="dice_throw_unfair">Throw Dice!</button>
+
+            
+            <script type="text/javascript">
+
+                // demo loader
+                
+                var unfair_options = {
+                        possible_throws: 0, // 0 : infinite throws (default), n > 0 : n throws
+                        value_set : [
+                            {key: "1", probability: 1},
+                            {key: "2", probability: 1},
+                            {key: "3", probability: 1},
+                            {key: "4", probability: 1},
+                            {key: "5", probability: 1},
+                            {key: "6", probability: 10}
+                        ],
+                        //roll_duration: 1, // dice is animated this long
+                        roll_duration: function(){ return 1 + 3*(1 - Math.random()); }, // example duration drawn randomly from [1, 4]
+                        images : {
+                            base_url : 'img/',
+                            ext  : '.png',
+                            init : 'qmark1.png'
+                        }
+                    };
+
+                new Dice('dice_unfair','dice_throw_unfair',unfair_options);
+
+            </script>
+            
+        </fieldset>
+        
+        <br/><br/>
+        
+        <fieldset>
+            <legend>Example HTML predefined, result predefined.</legend>
+
+            <div id="dice_predefined" style="margin: 0px auto;"></div>
+
+            <br/>
+            
+            <button id="dice_throw_predefined">Throw Dice!</button>
+
+            
+            <script type="text/javascript">
+
+                // demo loader
+                
+                var predefined_options = {
+                        possible_throws: 0, // 0 : infinite throws (default), n > 0 : n throws
+                        value_set : [
+                            {key: "1", probability: 0},
+                            {key: "2", probability: 0},
+                            {key: "3", probability: 0},
+                            {key: "4", probability: 0},
+                            {key: "5", probability: 0},
+                            {key: "6", probability: 10}
+                        ],
+                        //roll_duration: 1, // dice is animated this long
+                        roll_duration: function(){ return 1 + 3*(1 - Math.random()); }, // example duration drawn randomly from [1, 4]
+                        images : {
+                            base_url : 'img/',
+                            ext  : '.png',
+                            init : 'qmark1.png'
+                        }
+                    };
+
+                new Dice('dice_predefined','dice_throw_predefined',predefined_options);
+
+            </script>
+            
+        </fieldset>
+        
+        <br/><br/>
+        
+        
+        <fieldset>
+            <legend>Example HTML predefined, custom animation images.</legend>
+
+            <style type="text/css">
+                #dice_animation img {height: 38px;}
+            </style>
+            <div id="dice_animation" style="margin: 0px auto;"></div>
+
+            <br/>
+            
+            <button id="dice_throw_animation">Throw Dice!</button>
+
+            
+            <script type="text/javascript">
+
+                // demo loader
+                
+                var ani_options = {
+                        possible_throws: 0, // 0 : infinite throws (default), n > 0 : n throws
+                        value_set : [
+                            {key: "1", probability: 1},
+                            {key: "2", probability: 1},
+                            {key: "3", probability: 1},
+                            {key: "4", probability: 1},
+                            {key: "5", probability: 1},
+                            {key: "6", probability: 1}
+                        ],
+                        //roll_duration: 1, // dice is animated this long
+                        roll_duration: function(){ return 1 + 9*(1 - Math.random()); }, // example duration drawn randomly from [1, 10]
+                        images : {
+                            base_url : 'img/',
+                            ext  : '.png',
+                            init : 'qmark1.png'
+                        },
+                        animation: {
+                            images: ['smiley.png','smiley-green.png','smiley-rosa.png']
+                        }
+                    };
+
+                new Dice('dice_animation','dice_throw_animation',ani_options);
+
+            </script>
+            
+        </fieldset>
+        
+        <br/><br/>
+
+        <fieldset>
+            <legend>Example Pure Javascript, two throws</legend>
+        
+            <script type="text/javascript">
+        
+                var js_options = {
+                        possible_throws: 2, // 0 : infinite throws (default), n > 0 : n throws
+                        value_set : [
+                            {key: "1", probability: 1},
+                            {key: "2", probability: 1},
+                            {key: "3", probability: 1},
+                            {key: "4", probability: 1},
+                            {key: "5", probability: 1},
+                            {key: "6", probability: 1}
+                        ],
+                        //roll_duration: 1, // dice is animated this long
+                        roll_duration: function(){ return 1 + 3*(1 - Math.random()); }, // example duration drawn randomly from [1, 4]
+                        images : {
+                            base_url : 'img/',
+                            ext  : '.png',
+                            init : 'qmark1.png'
+                        }
+                    };
+                    
+                dice_create_here('hej hej',js_options);
+            
+            </script>
+            
+        </fieldset>
+        
+        <br/><br/>
+
+        
+        <fieldset>
+            <legend>Example HTML predefined with custom styling, and three throws.</legend>
+
+            <div style="text-align: center;">
+                <div id="dice_styled" style="margin: 0px auto;"></div>
+            </div>
+
+            <br/>
+            
+            <div style="float:right">
+                <button id="dice_styled_throw">Throw Dice!</button>
+            </div>
+            
+            <br clear="all"/>
+            
+            
+            <script type="text/javascript">
+
+                var dice_options_styled = {
+                        possible_throws: 3, // 0 : infinite throws (default), n > 0 : n throws
+                        value_set : [
+                            {key: "1", probability: 1},
+                            {key: "2", probability: 1},
+                            {key: "3", probability: 1},
+                            {key: "4", probability: 1},
+                            {key: "5", probability: 1},
+                            {key: "6", probability: 1}
+                        ],
+                        //roll_duration: 1, // dice is animated this long
+                        roll_duration: function(){ return 1 + 3*(1 - Math.random()); }, // example duration drawn randomly from [1, 4]
+                        images : {
+                            base_url : 'img/',
+                            ext  : '.png',
+                            init : 'qmark1.png',
+                            animation: []
+                        }
+                    };
+
+                new Dice('dice_styled','dice_styled_throw',dice_options_styled);
+
+            </script>
+
+        </fieldset>
+        
+        
+        
+        
+    </body>
+</html>
