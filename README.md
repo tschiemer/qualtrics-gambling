@@ -3,9 +3,9 @@ qualtrics-gambling
 
 Javascript based gambling variants for Qualtrics forms. Components as follows:
 
-- Dice rolling
-- Spinning wheel
-- Pick-A-Card Table
+- Dice rolling ([Demo](https://tschiemer.github.io/qualtrics-gambling/dice/dice.html))
+- Spinning wheel ([Demo](https://tschiemer.github.io/qualtrics-gambling/wheel/wheel.html))
+- Pick-A-Card Table ([Demo](https://tschiemer.github.io/qualtrics-gambling/pickanumber/pickanumber.html))
 
 
 The dice and wheel components offer the following features:
