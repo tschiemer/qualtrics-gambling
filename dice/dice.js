@@ -472,7 +472,9 @@
             // If a callback function has been set, call it.
             if (this.result_callback != null)
             {
-                this.result_callback(this.done_throws, result.key);
+            	window.setTimeout( function(){
+	                self.result_callback(self.done_throws, result.key);
+	            }, 10);
             }
 
             if (this.possible_throws == 0 || this.done_throws < this.possible_throws)
@@ -481,7 +483,9 @@
             }
             else if (typeof this.finished_callback != 'undefined')
             {
-                this.finished_callback();
+            	window.setTimeout( function(){
+	                self.finished_callback();
+	            }, 10);
             }
         }
     }
