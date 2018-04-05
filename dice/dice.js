@@ -474,7 +474,7 @@
             {
             	window.setTimeout( function(){
 	                self.result_callback(self.done_throws, result.key);
-	            }, 10);
+	            }, 100);
             }
 
             if (this.possible_throws == 0 || this.done_throws < this.possible_throws)
@@ -485,7 +485,7 @@
             {
             	window.setTimeout( function(){
 	                self.finished_callback();
-	            }, 10);
+	            }, 100);
             }
         }
     }
